@@ -1,3 +1,9 @@
+import Preloader from "@/components/Preloader";
+import BookCallModal from "@/components/BookCallModal";
+import ScrollRail from "@/components/ScrollRail";
+import WeatherSky from "@/components/WeatherSky";
+import ScrollFX from "@/components/ScrollFX";
+import VelocityMarquee from "@/components/VelocityMarquee";
 import Header from "@/components/Header";
 import Hero from "@/components/sections/Hero";
 import Intro from "@/components/sections/Intro";
@@ -7,10 +13,16 @@ import About from "@/components/sections/About";
 import Stack from "@/components/sections/Stack";
 import Quote from "@/components/sections/Quote";
 import Footer from "@/components/sections/Footer";
+import { marquee } from "@/data/site";
 
 export default function Home() {
   return (
     <>
+      <Preloader />
+      <ScrollFX />
+      <BookCallModal />
+      <ScrollRail />
+      <WeatherSky />
       <Header />
       <main className="frame-main">
         <div className="rule-bleed" />
@@ -28,7 +40,7 @@ export default function Home() {
         <About />
         <div className="rule" />
         <Stack />
-        <div className="rule" />
+        <VelocityMarquee items={marquee} />
         <Quote />
         <Footer />
       </main>

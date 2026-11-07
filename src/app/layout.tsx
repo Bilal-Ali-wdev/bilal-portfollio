@@ -26,8 +26,20 @@ const hand = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: "Bilal — Product Designer & Builder",
-  description: "Technical product and experience designer crafting AI and SaaS products — from research to design systems to code.",
+  title: "Bilal — Full Stack Developer · Gen AI, MERN, Next.js & DevOps",
+  description:
+    "Bilal is a full stack developer and DevOps engineer building Gen AI, MERN and Next.js products — from APIs and databases to CI/CD, Docker, Kubernetes and AWS.",
+  keywords: [
+    "Full Stack Developer",
+    "Gen AI",
+    "MERN",
+    "Next.js",
+    "NestJS",
+    "DevOps Engineer",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+  ],
 };
 
 export const viewport: Viewport = {
@@ -37,8 +49,9 @@ export const viewport: Viewport = {
   ],
 };
 
-// Sets the theme before first paint so there is no light/dark flash.
-const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){}})();`;
+// Before first paint: set the theme (no light/dark flash) and flag the preloader.
+// Without JS neither class is added, so the page simply shows.
+const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.dataset.theme=t;d.classList.add('is-loading','has-preloader')}catch(e){}})();`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

@@ -1,31 +1,26 @@
-import { hero, site } from "@/data/site";
+import { hero } from "@/data/site";
 import Avatar from "../Avatar";
 import SmoothLink from "../SmoothLink";
+import RotatingText from "../RotatingText";
 
 export default function Hero() {
-  const lines = [...hero.headline.map((t) => ({ t, muted: false })), { t: hero.headlineMuted, muted: true }];
-
   return (
     <section id="home" className="hero">
-      <div className="hero-meta mono">
-        <span>(Portfolio {site.year})</span>
-        <span>{site.domain}</span>
-      </div>
-
       <div className="hero-grid">
         <div className="hero-copy">
           <h1 className="hero-title">
-            {lines.map(({ t, muted }, i) => (
+            {hero.headline.map((t, i) => (
               <span key={i} className="line-mask">
-                <span className={muted ? "muted" : undefined} style={{ animationDelay: `${0.15 + i * 0.1}s` }}>
-                  {t}
-                </span>
+                <span style={{ animationDelay: `${0.15 + i * 0.1}s` }}>{t}</span>
               </span>
             ))}
+            <span className="line-evap muted">
+              <RotatingText words={hero.headlineRotating} />
+            </span>
           </h1>
 
           <div className="hero-actions" style={{ animation: "rise-soft 1s 0.5s var(--ease-out) both" }}>
-            <SmoothLink href="#about" className="btn btn-ghost">
+            <SmoothLink href="#about" className="btn btn-ghost" data-magnetic="0.25">
               About me
             </SmoothLink>
             <SmoothLink href="#work" className="btn btn-solid">
@@ -44,21 +39,25 @@ export default function Hero() {
         </div>
 
         <div className="hero-art">
-          <p className="greeting">{hero.greeting}</p>
-          <svg
+          <p className="greeting">
+            {hero.greeting}
+            {/* hand-drawn arrow: starts at the end of the text, lands on the avatar's head */}
+            <svg
             className="greet-arrow"
             aria-hidden="true"
-            width="90"
-            height="90"
-            viewBox="0 0 90 90"
+            width="96"
+            height="96"
+            viewBox="0 0 96 96"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="2.2"
             strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <path d="M5 10c40-6 64 14 66 58" />
-            <path d="m60 58 11 12 7-15" />
-          </svg>
+            <path d="M6 12c38-8 66 12 68 60" />
+            <path d="m62 62 12 12 9-15" />
+            </svg>
+          </p>
           <Avatar />
         </div>
       </div>

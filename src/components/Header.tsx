@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useState, type MouseEvent } from "react";
+import Image from "next/image";
 import { useScrollTo } from "@/lib/useScrollTo";
 import { site } from "@/data/site";
+import { openContact } from "@/lib/contact";
 import ThemeToggle from "./ThemeToggle";
 import { AboutIcon, DotsIcon, HomeIcon, LabIcon, StackIcon, WorkIcon } from "./icons";
 
 const NAV = [
   { id: "home", label: "Home", Icon: HomeIcon },
   { id: "work", label: "Work", Icon: WorkIcon },
-  { id: "experiments", label: "Experiments", Icon: LabIcon },
+  { id: "experiments", label: "AI Lab", Icon: LabIcon },
   { id: "about", label: "About", Icon: AboutIcon },
   { id: "stack", label: "Stack", Icon: StackIcon },
 ] as const;
@@ -59,6 +61,22 @@ export default function Header() {
 
   return (
     <header className={`header${scrolled ? " is-scrolled" : ""}`}>
+      <div className="scroll-progress" aria-hidden="true">
+        <span />
+      </div>
+
+      <div className="header-inner">
+      <a href="#home" onClick={go("home")} className="brand" aria-label="Bilal Ali — back to top">
+        <Image
+          src="/bilal-logo.svg"
+          alt="Bilal Ali"
+          width={590}
+          height={194}
+          priority
+          className="brand-logo invert-dark"
+        />
+      </a>
+
       <nav className="nav" aria-label="Primary">
         <div className="nav-icons">
           <span
@@ -82,14 +100,17 @@ export default function Header() {
         </div>
 
         <ThemeToggle />
+      </nav>
 
-        <a href={site.ctaHref} onClick={go("contact")} className="cta-pill">
+      <div className="header-end">
+        <button type="button" onClick={openContact} className="cta-pill" data-magnetic="0.2" aria-haspopup="dialog">
           <span className="cta-dot">
             <DotsIcon />
           </span>
           <span>{site.ctaLabel}</span>
-        </a>
-      </nav>
+        </button>
+      </div>
+      </div>
     </header>
   );
 }

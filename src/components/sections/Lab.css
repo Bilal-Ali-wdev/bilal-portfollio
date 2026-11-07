@@ -1,0 +1,375 @@
+/* ==========================================================================
+   Lab — n8n automations on a 3D desktop display
+   Rows mirror the Works section: details on one side, a stage on the other.
+   ========================================================================== */
+.lab-list {
+  margin-top: 40px;
+}
+
+.lab-row {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  align-items: center;
+  gap: clamp(32px, 6vw, 96px);
+  padding: 64px 0;
+}
+
+.lab-row + .lab-row {
+  border-top: 1px solid var(--line);
+}
+
+.lab-row.is-flipped {
+  grid-template-columns: 1.15fr 1fr;
+}
+
+.lab-row.is-flipped .lab-stage {
+  order: -1;
+}
+
+/* ---------- details ---------- */
+.lab-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.lab-number {
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(56px, 6vw, 84px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--subtle);
+}
+
+.lab-title {
+  margin: 16px 0 0;
+  font-size: clamp(32px, 3.8vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+}
+
+.lab-desc {
+  margin: 18px 0 0;
+  max-width: 50ch;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--body);
+}
+
+.lab-points {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lab-points li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.lab-points svg {
+  flex-shrink: 0;
+  color: #16a34a;
+}
+
+:root[data-theme="dark"] .lab-points svg {
+  color: #4ade80;
+}
+
+.lab-cta {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.lab-cta:hover .project-cta-line {
+  width: 72px;
+}
+
+/* ---------- 3D desktop display ----------
+   .desk is a size container, so every measurement below is in cqw
+   (1cqw = 1% of the display's width) and the model scales perfectly. */
+.lab-stage .stage-floor {
+  height: 30%;
+}
+
+.desk {
+  --t: 1.3cqw; /* casing thickness */
+  position: absolute;
+  left: 52%;
+  top: 47%;
+  width: 72%;
+  container-type: inline-size;
+  perspective: 2400px;
+  transform: translate(-50%, -58%);
+  transition: transform 0.8s var(--ease-out);
+}
+
+.lab-row.is-flipped .desk {
+  left: 48%;
+}
+
+.lab-stage:hover .desk {
+  transform: translate(-50%, -60%) scale(1.02);
+}
+
+.mon {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9.4;
+  transform-style: preserve-3d;
+  transform: rotateX(-6deg) rotateY(-18deg);
+  will-change: transform;
+}
+
+.lab-row.is-flipped .mon {
+  transform: rotateX(-6deg) rotateY(18deg);
+}
+
+/* front: black glass with an aluminium rim */
+.mon-front {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 1.4cqw;
+  background: #0a0a0b;
+  cursor: zoom-in;
+  box-shadow:
+    0 0 0 0.32cqw #c6c7cc,
+    0 0 0 0.45cqw #8d8e95,
+    inset 0 0 0 0.18cqw #1d1d21;
+}
+
+.mon-screen {
+  position: absolute;
+  inset: 1.9cqw;
+  overflow: hidden;
+  border-radius: 0.35cqw;
+}
+
+.mon-shot {
+  object-fit: cover;
+  object-position: center;
+}
+
+.mon-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 28%, transparent 44%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04), transparent 25%);
+}
+
+.mon-zoom {
+  position: absolute;
+  right: 3.4cqw;
+  bottom: 3.4cqw;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.4s var(--ease-out);
+}
+
+.mon-front:hover .mon-zoom,
+.mon-front:focus-visible .mon-zoom {
+  opacity: 1;
+  transform: none;
+}
+
+/* aluminium casing edges, folded back from each side of the front */
+.mon-edge {
+  position: absolute;
+  background: linear-gradient(to bottom, #d9dade, #a7a8af);
+}
+
+.mon-edge.is-right {
+  top: 0.8cqw;
+  bottom: 0.8cqw;
+  left: 100%;
+  width: var(--t);
+  transform-origin: 0 50%;
+  transform: rotateY(90deg);
+  background: linear-gradient(to right, #c9cacf, #8f9097);
+}
+
+.mon-edge.is-left {
+  top: 0.8cqw;
+  bottom: 0.8cqw;
+  right: 100%;
+  width: var(--t);
+  transform-origin: 100% 50%;
+  transform: rotateY(-90deg);
+  background: linear-gradient(to left, #c9cacf, #8f9097);
+}
+
+.mon-edge.is-top {
+  left: 0.8cqw;
+  right: 0.8cqw;
+  bottom: 100%;
+  height: var(--t);
+  transform-origin: 50% 100%;
+  transform: rotateX(90deg);
+  background: linear-gradient(to top, #e4e5e9, #b5b6bc);
+}
+
+.mon-edge.is-bottom {
+  left: 0.8cqw;
+  right: 0.8cqw;
+  top: 100%;
+  height: var(--t);
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+  background: linear-gradient(to bottom, #9fa0a7, #6f7077);
+}
+
+.mon-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.4cqw;
+  transform: translateZ(calc(var(--t) * -1)) rotateY(180deg);
+  background:
+    radial-gradient(50% 50% at 50% 45%, rgba(255, 255, 255, 0.35), transparent 70%),
+    linear-gradient(160deg, #e2e3e7, #b0b1b8);
+}
+
+/* stand: one bent aluminium plate — an arm leaning back, then a flat foot */
+.mon-neck {
+  position: absolute;
+  left: 40cqw;
+  width: 20cqw;
+  top: 24cqw;
+  height: 49.5cqw;
+  border-radius: 0.6cqw;
+  transform-origin: 50% 0;
+  transform: translateZ(calc(var(--t) * -1 - 2cqw)) rotateX(-12deg);
+  background: linear-gradient(to bottom, #7d7e85 0%, #a9aab1 45%, #d3d4d9 85%, #c2c3c8 100%);
+  box-shadow: inset 0.25cqw 0 0 rgba(255, 255, 255, 0.35), inset -0.25cqw 0 0 rgba(0, 0, 0, 0.15);
+}
+
+.mon-foot {
+  position: absolute;
+  left: 34cqw;
+  width: 32cqw;
+  top: 71.4cqw;
+  height: 25cqw;
+  border-radius: 0.6cqw 0.6cqw 1.6cqw 1.6cqw;
+  transform-style: preserve-3d;
+  transform-origin: 50% 0;
+  transform: translateZ(calc(var(--t) * -1 - 12.4cqw)) rotateX(90deg);
+  background: linear-gradient(to bottom, #b3b4ba, #dcdde1 55%, #c9cacf);
+  box-shadow: inset 0 0 0 0.15cqw rgba(0, 0, 0, 0.1);
+}
+
+/* soft contact shadow on the desk, just under the foot */
+.mon-foot-shadow {
+  position: absolute;
+  inset: -18% -22%;
+  border-radius: 50%;
+  transform: translateZ(-0.4cqw);
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25) 55%, transparent);
+  filter: blur(10px);
+}
+
+/* ---------- full-size workflow viewer ---------- */
+.lab-zoom {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 24px;
+  border: 0;
+  background: transparent;
+  overflow: auto;
+}
+
+.lab-zoom[open] {
+  display: grid;
+  place-items: center;
+}
+
+.lab-zoom::backdrop {
+  background: rgba(8, 8, 10, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: backdrop-in 0.35s ease both;
+}
+
+.lab-zoom-figure {
+  position: relative;
+  margin: 0;
+  width: min(1200px, 100%);
+  animation: panel-in 0.6s var(--ease-out) both;
+}
+
+.lab-zoom-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+}
+
+.lab-zoom-close {
+  top: -14px;
+  right: -14px;
+}
+
+.lab-zoom figcaption {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+  color: #ffffff;
+}
+
+.lab-zoom figcaption .mono {
+  color: #a1a1aa;
+}
+
+.lab-zoom figcaption strong {
+  font-size: 18px;
+}
+
+@media (max-width: 860px) {
+  .lab-row,
+  .lab-row.is-flipped {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 48px 0;
+  }
+  .lab-row .lab-stage {
+    order: -1;
+  }
+  .desk {
+    width: 70%;
+  }
+  .lab-zoom-close {
+    top: 8px;
+    right: 8px;
+  }
+}

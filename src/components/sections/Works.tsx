@@ -1,8 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { categories, projects } from "@/data/site";
 import Reveal from "../Reveal";
+import Scramble from "../Scramble";
+import Split from "../Split";
+import ProjectShowcase from "../ProjectShowcase";
 
 type Filter = (typeof categories)[number];
 
@@ -14,55 +18,42 @@ export default function Works() {
     [filter]
   );
 
+  const choose = (c: Filter) => {
+    setFilter(c);
+    // the page got shorter/taller — let every scroll animation re-measure
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  };
+
   return (
     <section id="work" className="section">
-      <Reveal className="works-head">
+      <div className="works-head">
         <div>
-          <p className="mono section-label">(02) — Selected work</p>
-          <h2 className="works-title">Works.</h2>
+          <Scramble text="(02) — SELECTED WORK" className="section-label" />
+          <h2 className="works-title" data-anim="chars">
+            <Split text="Works." mode="chars" />
+          </h2>
         </div>
-        <div className="filters" role="group" aria-label="Filter projects">
-          {categories.map((c) => (
-            <button
-              key={c}
-              type="button"
-              className="filter"
-              aria-pressed={filter === c}
-              onClick={() => setFilter(c)}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      </Reveal>
+        <Reveal delay={0.2}>
+          <div className="filters" role="group" aria-label="Filter projects">
+            {categories.map((c) => (
+              <button
+                key={c}
+                type="button"
+                className="filter"
+                aria-pressed={filter === c}
+                onClick={() => choose(c)}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </Reveal>
+      </div>
 
-      <div className="grid-2 works-grid">
+      <div className="projects">
         {visible.length === 0 && <p className="mono empty">Nothing here yet — check back soon.</p>}
         {visible.map((p, i) => (
-          <Reveal key={`${filter}-${i}`} delay={(i % 2) * 0.1}>
-            <article className="card card-enter" style={{ animationDelay: `${i * 0.06}s` }}>
-              <div className={`cover project-cover cover-${p.cover}`}>
-                <div className="cover-inner mono">[Project cover image]</div>
-              </div>
-              <div className="card-body">
-                <div className="tags">
-                  {p.tags.map((t) => (
-                    <span key={t} className="tag">
-                      {t}
-                    </span>
-                  ))}
-                  <span className="tag tag-plain">{p.year}</span>
-                </div>
-                <h3>{p.name}</h3>
-                <p>
-                  {p.role} — {p.description}
-                </p>
-                <a href={p.href} className="link">
-                  Learn more <span className="arrow" aria-hidden="true">↗</span>
-                </a>
-              </div>
-            </article>
-          </Reveal>
+          <ProjectShowcase key={`${filter}-${p.name}`} project={p} index={i} />
         ))}
       </div>
     </section>

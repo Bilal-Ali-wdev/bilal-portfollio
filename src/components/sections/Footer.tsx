@@ -2,7 +2,9 @@
 
 import { site } from "@/data/site";
 import { useScrollTo } from "@/lib/useScrollTo";
+import { openContact } from "@/lib/contact";
 import SmoothLink from "../SmoothLink";
+import Split from "../Split";
 
 const MENU = [
   { label: "Home", href: "#home" },
@@ -16,16 +18,20 @@ export default function Footer() {
 
   return (
     <footer id="contact" className="footer">
+      <div className="footer-inner">
       <div className="footer-grid">
         <div>
-          <h2>
-            Let&apos;s build
-            <br />
-            <span>something good.</span>
+          <h2 data-anim="rise">
+            <span className="footer-line">
+              <Split text="Let's build" />
+            </span>
+            <span className="footer-line footer-muted">
+              <Split text="something that scales." />
+            </span>
           </h2>
-          <a href={site.socials[0].href} className="footer-cta">
+          <button type="button" onClick={openContact} className="footer-cta" data-magnetic="0.3" aria-haspopup="dialog">
             {site.ctaLabel} <span className="arrow" aria-hidden="true">↗</span>
-          </a>
+          </button>
         </div>
 
         <nav className="footer-nav" aria-label="Footer menu">
@@ -51,10 +57,11 @@ export default function Footer() {
         <span className="mono">
           © {site.year} {site.name}
         </span>
-        <button type="button" className="to-top" onClick={() => scrollTo(0)}>
+        <button type="button" className="to-top" onClick={() => scrollTo(0)} data-magnetic="0.35">
           BACK TO TOP <span aria-hidden="true">↑</span>
         </button>
-        <span className="mono">Designed and built by {site.name}</span>
+        <span className="mono">Built and deployed by {site.name}</span>
+      </div>
       </div>
     </footer>
   );

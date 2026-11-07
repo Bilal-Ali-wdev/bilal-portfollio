@@ -1,0 +1,188 @@
+/* ==========================================================================
+   Custom scroll rail
+   ========================================================================== */
+
+/* Hide the native scrollbar only where the rail is shown (mouse / trackpad). */
+@media (hover: hover) and (pointer: fine) {
+  html.has-scroll-rail {
+    scrollbar-width: none;
+  }
+  html.has-scroll-rail::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.scroll-rail {
+  position: fixed;
+  top: 96px;
+  bottom: 28px;
+  right: 10px;
+  z-index: 70;
+  width: 28px;
+  display: none;
+  opacity: 0.45;
+  transition: opacity 0.5s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .scroll-rail {
+    display: block;
+  }
+}
+
+.scroll-rail.is-awake,
+.scroll-rail:hover {
+  opacity: 1;
+}
+
+/* stays out of the way during the intro loader */
+html.has-preloader .scroll-rail {
+  opacity: 0 !important;
+}
+
+.scroll-rail-track {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+}
+
+/* hairline guide */
+.scroll-rail-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--fg) 22%, transparent) 6%,
+    color-mix(in srgb, var(--fg) 22%, transparent) 94%,
+    transparent
+  );
+  transform: translateX(-50%);
+}
+
+/* section markers */
+.scroll-rail-tick {
+  position: absolute;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.scroll-rail-tick::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 2px;
+  background: var(--bg);
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--fg) 45%, transparent);
+  transform: rotate(45deg) scale(0.8);
+  transition: transform 0.4s var(--ease-out), background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scroll-rail-tick:hover::before,
+.scroll-rail-tick.is-active::before {
+  background: var(--fg);
+  box-shadow: 0 0 0 1.5px var(--fg), 0 0 0 5px color-mix(in srgb, var(--fg) 12%, transparent);
+  transform: rotate(45deg) scale(1);
+}
+
+/* section names slide out when you hover the rail */
+.scroll-rail-label {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 10px);
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--inverse-bg);
+  color: var(--inverse-fg);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(8px, -50%);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.4s var(--ease-out);
+}
+
+.scroll-rail:hover .scroll-rail-label {
+  opacity: 0.55;
+  transform: translate(0, -50%);
+}
+
+.scroll-rail:hover .scroll-rail-tick:hover .scroll-rail-label,
+.scroll-rail:hover .scroll-rail-tick.is-active .scroll-rail-label {
+  opacity: 1;
+}
+
+/* thumb: a slim pill with a soft glow, widens on hover / drag */
+.scroll-rail-thumb {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4px;
+  margin-left: -2px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, var(--fg), color-mix(in srgb, var(--fg) 70%, transparent));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--bg) 70%, transparent), 0 4px 14px color-mix(in srgb, var(--fg) 25%, transparent);
+  cursor: grab;
+  will-change: transform;
+  transition: width 0.3s var(--ease-out), margin 0.3s var(--ease-out);
+}
+
+.scroll-rail:hover .scroll-rail-thumb,
+.scroll-rail.is-dragging .scroll-rail-thumb {
+  width: 8px;
+  margin-left: -4px;
+}
+
+.scroll-rail.is-dragging .scroll-rail-thumb {
+  cursor: grabbing;
+}
+
+/* live percentage, riding beside the thumb */
+.scroll-rail-percent {
+  position: absolute;
+  top: 0;
+  right: calc(100% + 6px);
+  margin-top: -11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--fg);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform;
+  transition: opacity 0.35s ease;
+}
+
+.scroll-rail.is-awake .scroll-rail-percent {
+  opacity: 1;
+}
+
+/* while hovering, the section labels take over the left side */
+.scroll-rail:hover .scroll-rail-percent {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-rail-thumb {
+    transition: none;
+  }
+}

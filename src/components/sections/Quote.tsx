@@ -1,13 +1,13 @@
 import { quote } from "@/data/site";
-import Reveal from "../Reveal";
+import Split from "../Split";
 
 export default function Quote() {
   return (
-    <Reveal as="figure" className="quote" >
-      <blockquote>
-        “{quote.text} <span className="muted">{quote.muted}”</span>
+    <figure className="quote">
+      <blockquote data-anim="fill">
+        <Split text={`“${quote.text}`} muted={`${quote.muted}”`} />
       </blockquote>
       <figcaption className="mono">— {quote.author}</figcaption>
-    </Reveal>
+    </figure>
   );
 }
