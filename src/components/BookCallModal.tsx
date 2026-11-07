@@ -94,6 +94,8 @@ export default function BookCallModal() {
       }}
     >
       <div className="contact-panel">
+        {/* grab handle — only shown when the panel is a bottom sheet on phones */}
+        <span className="contact-handle" aria-hidden="true" />
         <button type="button" className="contact-close" onClick={close} aria-label="Close">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <path d="M6 6l12 12M18 6 6 18" />
@@ -177,14 +179,16 @@ export default function BookCallModal() {
               <p className="mono contact-eyebrow">(Book a call)</p>
               <h3 className="contact-form-title">Start a conversation</h3>
 
-              <div className="field">
-                <input ref={nameInput} id="cf-name" name="name" type="text" placeholder=" " autoComplete="name" required />
-                <label htmlFor="cf-name">Your name</label>
-              </div>
+              <div className="contact-row">
+                <div className="field">
+                  <input ref={nameInput} id="cf-name" name="name" type="text" placeholder=" " autoComplete="name" required />
+                  <label htmlFor="cf-name">Your name</label>
+                </div>
 
-              <div className="field">
-                <input id="cf-email" name="email" type="email" placeholder=" " autoComplete="email" required />
-                <label htmlFor="cf-email">Email address</label>
+                <div className="field">
+                  <input id="cf-email" name="email" type="email" placeholder=" " autoComplete="email" required />
+                  <label htmlFor="cf-email">Email address</label>
+                </div>
               </div>
 
               <fieldset className="topics">
