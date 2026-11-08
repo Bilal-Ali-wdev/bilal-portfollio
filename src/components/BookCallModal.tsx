@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState, type FormEvent, type MouseEvent } from "react";
 import Image from "next/image";
 import { useLenis } from "lenis/react";
-import { OPEN_CONTACT_EVENT } from "@/lib/contact";
+import { OPEN_CONTACT_EVENT, field, sendEnquiry } from "@/lib/contact";
 import { gmailComposeUrl, site } from "@/data/site";
+import SuccessBurst from "./SuccessBurst";
 import "./BookCallModal.css";
 
 const TOPICS = ["Full stack app", "Gen AI feature", "DevOps & cloud", "Something else"];
@@ -12,7 +13,7 @@ const CLOSE_MS = 320;
 
 /**
  * "Book a call" popup. Opens on the `contact:open` event (see lib/contact.ts).
- * Sending composes a pre-filled Gmail draft to Bilal — no server needed.
+ * Submissions are emailed straight to Bilal through /api/contact.
  */
 export default function BookCallModal() {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -21,6 +22,8 @@ export default function BookCallModal() {
   const lenis = useLenis();
   const [closing, setClosing] = useState(false);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
   const [topic, setTopic] = useState("");
 
   useEffect(() => {
@@ -29,6 +32,7 @@ export default function BookCallModal() {
       if (!d || d.open) return;
       returnFocus.current = document.activeElement as HTMLElement | null;
       setSent(false);
+      setError("");
       d.showModal();
       lenis?.stop();
       requestAnimationFrame(() => nameInput.current?.focus({ preventScroll: true }));
@@ -52,29 +56,30 @@ export default function BookCallModal() {
     if (e.target === e.currentTarget) close();
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const name = String(data.get("name") ?? "").trim();
-    const email = String(data.get("email") ?? "").trim();
-    const message = String(data.get("message") ?? "").trim();
-
-    const subject = `Book a call — ${name}${topic ? ` (${topic})` : ""}`;
-    const body = [
-      `Hi Bilal,`,
-      ``,
-      message,
-      ``,
-      topic ? `Interested in: ${topic}` : "",
-      `—`,
-      name,
-      email,
-    ]
-      .filter((line, i, all) => !(line === "" && all[i - 1] === ""))
-      .join("\n");
-
-    window.open(gmailComposeUrl(subject, body), "_blank", "noopener,noreferrer");
-    setSent(true);
+    if (sending) return;
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    setSending(true);
+    setError("");
+    const result = await sendEnquiry({
+      name: field(data, "name"),
+      email: field(data, "email"),
+      phone: field(data, "phone"),
+      message: field(data, "message"),
+      topic: topic || undefined,
+      company: field(data, "company"),
+      source: "Book a call popup",
+    });
+    setSending(false);
+    if (result.ok) {
+      form.reset();
+      setTopic("");
+      setSent(true);
+    } else {
+      setError(result.error);
+    }
   };
 
   return (
@@ -163,15 +168,12 @@ export default function BookCallModal() {
         {/* Right: the form, or a confirmation once sent */}
         <div className="contact-main">
           {sent ? (
-            <div className="contact-sent" role="status">
-              <svg className="contact-sent-check" width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">
-                <circle cx="36" cy="36" r="33" stroke="currentColor" strokeWidth="2.5" />
-                <path d="m23 37 9 9 17-19" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <h3>Your message is ready in Gmail</h3>
-              <p>A pre-filled draft opened in a new tab — just hit Send and I&apos;ll get back to you.</p>
+            <div className="contact-sent">
+              <SuccessBurst title="Delivered to Bilal's inbox">
+                Your message is flying over — expect a reply by email or a call back soon.
+              </SuccessBurst>
               <button type="button" className="contact-link-btn" onClick={() => setSent(false)}>
-                ← Back to the form
+                ← Send another message
               </button>
             </div>
           ) : (
@@ -190,6 +192,24 @@ export default function BookCallModal() {
                   <label htmlFor="cf-email">Email address</label>
                 </div>
               </div>
+
+              <div className="field">
+                <input
+                  id="cf-phone"
+                  name="phone"
+                  type="tel"
+                  placeholder=" "
+                  autoComplete="tel"
+                  inputMode="tel"
+                  pattern="[+()0-9\s\-]{7,20}"
+                  title="Digits, spaces, +, - or brackets (7–20 characters)"
+                  required
+                />
+                <label htmlFor="cf-phone">Contact number</label>
+              </div>
+
+              {/* honeypot — hidden from people, tempting to bots */}
+              <input name="company" type="text" tabIndex={-1} autoComplete="off" className="hp-field" aria-hidden="true" />
 
               <fieldset className="topics">
                 <legend className="mono">What do you need?</legend>
@@ -211,13 +231,19 @@ export default function BookCallModal() {
                 <label htmlFor="cf-message">Tell me about yourself and your project</label>
               </div>
 
-              <button type="submit" className="contact-submit">
-                <span>Send message</span>
+              {error && (
+                <p className="form-error" role="alert">
+                  {error}
+                </p>
+              )}
+
+              <button type="submit" className={`contact-submit${sending ? " is-sending" : ""}`} disabled={sending}>
+                <span>{sending ? "Sending…" : "Send message"}</span>
                 <span className="contact-submit-icon" aria-hidden="true">
-                  ↗
+                  {sending ? <span className="btn-spinner" /> : "↗"}
                 </span>
               </button>
-              <p className="contact-note">Opens a pre-filled draft in Gmail — nothing is stored on this site.</p>
+              <p className="contact-note">Goes straight to Bilal&apos;s inbox — nothing is shared with anyone else.</p>
             </form>
           )}
         </div>

@@ -219,6 +219,53 @@ svg {
   color: var(--subtle);
 }
 
+/* honeypot field: off-screen for people, still "visible" to form-filling bots */
+.hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+/* inline form error (contact popup + chat booking form) */
+.form-error {
+  margin: 4px 0 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, #ef4444 40%, transparent);
+  background: color-mix(in srgb, #ef4444 10%, transparent);
+  color: #dc2626;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+:root[data-theme="dark"] .form-error {
+  color: #fca5a5;
+}
+
+/* small spinner used inside "Sending…" buttons */
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: btn-spin 0.7s linear infinite;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+button:disabled {
+  cursor: progress;
+  opacity: 0.85;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

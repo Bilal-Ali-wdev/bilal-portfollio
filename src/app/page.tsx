@@ -1,6 +1,7 @@
 import Preloader from "@/components/Preloader";
 import BookCallModal from "@/components/BookCallModal";
 import ScrollRail from "@/components/ScrollRail";
+import ChatBot from "@/components/ChatBot";
 import WeatherSky from "@/components/WeatherSky";
 import ScrollFX from "@/components/ScrollFX";
 import VelocityMarquee from "@/components/VelocityMarquee";
@@ -22,6 +23,7 @@ export default function Home() {
       <ScrollFX />
       <BookCallModal />
       <ScrollRail />
+      <ChatBot />
       <WeatherSky />
       <Header />
       <main className="frame-main">
