@@ -43,7 +43,7 @@ html.has-preloader .scroll-rail {
 .scroll-rail-track {
   position: absolute;
   inset: 0;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 /* hairline guide */
@@ -73,7 +73,7 @@ html.has-preloader .scroll-rail {
   padding: 0;
   border: 0;
   background: none;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .scroll-rail-tick::before {

@@ -90,7 +90,7 @@
   border: 0;
   background: none;
   color: inherit;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .lab-cta:hover .project-cta-line {
@@ -146,7 +146,7 @@
   border: 0;
   border-radius: 1.4cqw;
   background: #0a0a0b;
-  cursor: zoom-in;
+  cursor: var(--cursor-pointer);
   box-shadow:
     0 0 0 0.32cqw #c6c7cc,
     0 0 0 0.45cqw #8d8e95,

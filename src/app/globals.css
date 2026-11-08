@@ -137,6 +137,50 @@ body {
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
+/* Custom arrow cursor — black in light mode, white in dark mode.
+   Links, buttons and text fields keep their usual pointer / text cursors.
+   (Popup backdrops don't inherit, so they're listed too.) */
+html,
+::backdrop {
+  cursor: url("/cursors/cursor-dark.png") 4 3, auto;
+  cursor: -webkit-image-set(url("/cursors/cursor-dark.png") 1x, url("/cursors/cursor-dark@2x.png") 2x) 4 3, auto;
+  cursor: image-set(url("/cursors/cursor-dark.png") 1x, url("/cursors/cursor-dark@2x.png") 2x) 4 3, auto;
+}
+
+:root[data-theme="dark"],
+:root[data-theme="dark"] ::backdrop {
+  cursor: url("/cursors/cursor-light.png") 4 3, auto;
+  cursor: -webkit-image-set(url("/cursors/cursor-light.png") 1x, url("/cursors/cursor-light@2x.png") 2x) 4 3, auto;
+  cursor: image-set(url("/cursors/cursor-light.png") 1x, url("/cursors/cursor-light@2x.png") 2x) 4 3, auto;
+}
+
+/* Hand cursor for anything clickable — black outline in light mode, white in dark.
+   Plain 1x image everywhere, upgraded to a sharp 2x image where image-set() works. */
+:root {
+  --cursor-pointer: url("/cursors/pointer-black.png") 13 2, pointer;
+}
+
+:root[data-theme="dark"] {
+  --cursor-pointer: url("/cursors/pointer-white.png") 13 2, pointer;
+}
+
+@supports (cursor: image-set(url("/cursors/pointer-black.png") 1x) 0 0, auto) {
+  :root {
+    --cursor-pointer: image-set(url("/cursors/pointer-black.png") 1x, url("/cursors/pointer-black@2x.png") 2x) 13 2, pointer;
+  }
+  :root[data-theme="dark"] {
+    --cursor-pointer: image-set(url("/cursors/pointer-white.png") 1x, url("/cursors/pointer-white@2x.png") 2x) 13 2, pointer;
+  }
+}
+
+a[href],
+button:not(:disabled),
+label[for],
+summary,
+[role="button"] {
+  cursor: var(--cursor-pointer);
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -354,7 +398,7 @@ html.is-loading .header-end {
   box-shadow: var(--shadow-soft);
   display: grid;
   place-items: center;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   overflow: hidden;
   transition: transform 0.2s ease;
 }
@@ -792,7 +836,7 @@ a:hover .arrow-right {
   background: transparent;
   font-size: 14px;
   font-weight: 500;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
@@ -1050,7 +1094,7 @@ a.project-cta:hover .project-cta-line {
 /* the laptop card is a link when the project is live */
 .project-stage.is-link {
   display: block;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .stage-visit {
@@ -1796,7 +1840,7 @@ a.project-cta:hover .project-cta-line {
   background: none;
   border: 0;
   padding: 0;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .footer-nav a::after,
@@ -1844,7 +1888,7 @@ a.project-cta:hover .project-cta-line {
   border: 1px solid var(--footer-line);
   background: none;
   color: #ffffff;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   font-family: var(--font-mono), monospace;
   font-size: 12px;
   letter-spacing: 0.06em;

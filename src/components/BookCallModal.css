@@ -6,7 +6,7 @@
 button.cta-pill,
 button.footer-cta {
   border: 0;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   font-family: inherit;
 }
 
@@ -74,7 +74,7 @@ button.footer-cta {
   border-radius: 999px;
   background: var(--bg);
   color: var(--fg);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: transform 0.4s var(--ease-out), border-color 0.2s ease;
 }
 
@@ -397,7 +397,7 @@ button.footer-cta {
   font-family: inherit;
   font-size: 13px;
   font-weight: 500;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease-out);
 }
 
@@ -431,7 +431,7 @@ button.footer-cta {
   font-family: inherit;
   font-size: 16px;
   font-weight: 600;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   overflow: hidden;
   isolation: isolate;
   transition: transform 0.25s var(--ease-out), box-shadow 0.3s ease;
@@ -531,7 +531,7 @@ button.footer-cta {
   color: var(--fg);
   font: inherit;
   font-weight: 600;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .contact-link-btn:hover {
